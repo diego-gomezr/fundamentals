@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <http:listener-config name="HTTP_Listener_testFlows" host="0.0.0.0" port="9091" doc:name="HTTP Listener Configuration"/>
+    <http:request-config name="HTTP_Request_tester" host="0.0.0.0" port="${http.port}" basePath="/api" doc:name="HTTP Request Configuration"/>
+    <flow name="GetAllAccountsTestFlow">
+        <http:listener config-ref="HTTP_Listener_testFlows" path="/testsAllAccounts" allowedMethods="GET" doc:name="HTTP"/>
+        <http:request config-ref="HTTP_Request_tester" path="/accounts" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:query-param paramName="type" value="${test.type}"/>
+                <http:header headerName="Requester-ID" value="${test.requesterid}"/>
+            </http:request-builder>
+        </http:request>
+    </flow>
+    <flow name="GetSpecificAccountsTestFlow">
+        <http:listener config-ref="HTTP_Listener_testFlows" path="/testsSpecificAccounts" allowedMethods="GET" doc:name="HTTP"/>
+        <http:request config-ref="HTTP_Request_tester" path="/accounts/{id}" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:uri-param paramName="id" value="${test.id}"/>
+                <http:header headerName="Requester-ID" value="${test.requesterid}"/>
+            </http:request-builder>
+        </http:request>
+    </flow>
+    <flow name="POSTAccountsTestFlow">
+        <http:listener config-ref="HTTP_Listener_testFlows" path="/testPostAccounts" allowedMethods="GET" doc:name="HTTP"/>
+        <set-payload value="[   {     &quot;firstName&quot;: &quot;John&quot;,     &quot;lastName&quot;: &quot;Smith&quot;,     &quot;address&quot;: &quot;1002 Main Street, Springfield TX&quot;,     &quot;postal&quot;: &quot;77002&quot;,     &quot;country&quot;: &quot;USA&quot;,     &quot;accountType&quot;: &quot;personal&quot;,     &quot;miles&quot;: 8492   } ]" mimeType="application/json" doc:name="Copy_of_Set Payload"/>
+        <http:request config-ref="HTTP_Request_tester" path="/accounts" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:query-param paramName="type" value="${test.type}"/>
+                <http:header headerName="Requester-ID" value="${test.requesterid}"/>
+            </http:request-builder>
+        </http:request>
+    </flow>
+    <flow name="testPUTOneAccount">
+        <http:listener config-ref="HTTP_Listener_testFlows" path="/testPutOneAccount" allowedMethods="GET" doc:name="HTTP"/>
+        <set-payload value="   {     &quot;firstName&quot;: &quot;John&quot;,     &quot;lastName&quot;: &quot;Smith&quot;,     &quot;address&quot;: &quot;1002 Main Street, Springfield TX&quot;,     &quot;postal&quot;: &quot;77002&quot;,     &quot;country&quot;: &quot;USA&quot;,     &quot;accountType&quot;: &quot;personal&quot;,     &quot;miles&quot;: 8492   } " mimeType="application/json" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_tester" path="/accounts/{id}" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:uri-param paramName="id" value="${test.id}"/>
+                <http:header headerName="Requester-ID" value="${test.requesterid}"/>
+            </http:request-builder>
+        </http:request>
+    </flow>
+    <flow name="testPATCHOneAccount">
+        <http:listener config-ref="HTTP_TEST_Configuration" path="/testPatchOneAccount" allowedMethods="GET" doc:name="Copy_of_HTTP"/>
+        <set-payload value="   {     &quot;firstName&quot;: &quot;John&quot;,     &quot;lastName&quot;: &quot;Smith&quot;,     &quot;address&quot;: &quot;1002 Main Street, Springfield TX&quot;,     &quot;postal&quot;: &quot;77002&quot;,     &quot;country&quot;: &quot;USA&quot;,     &quot;accountType&quot;: &quot;personal&quot;,     &quot;miles&quot;: 8492   } " mimeType="application/json" doc:name="Copy_of_Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/accounts/{id}" method="PATCH" doc:name="Copy_of_HTTP">
+            <http:request-builder>
+                <http:uri-param paramName="id" value="${test.id}"/>
+                <http:header headerName="Requester-ID" value="${test.requestid}"/>
+            </http:request-builder>
+        </http:request>
+    </flow>
+</mule>

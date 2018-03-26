@@ -1,0 +1,5 @@
+#Mon Mar 26 10:10:58 PDT 2018
+encoding=UTF-8
+domain=default
+redeployment.enabled=true
+config.resources=implementation.xml,accounts-api.xml,interface.xml,global.xml,testflows.xml
