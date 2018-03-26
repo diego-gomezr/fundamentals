@@ -35,7 +35,7 @@ types:
       400:
         body: 
           application/json:
-            example: {"errorMessage": "fatal error", "errorCode": 55}
+            example:  !include Examples/errorObj.raml
         
   post:
     description: This method is used to create one or more accounts.
@@ -50,11 +50,12 @@ types:
       201:
         body: 
           application/json:
-            example: {"message" : "Account Created (but not really)"}
+            example: 
+              message: Account Created (but not really)
       400:
         body:
           application/json:
-            example: {"errorMessage": "fatal error", "errorCode": 55}
+            example: !include Examples/errorObj.raml
   /{id}:
     get:
       description: Get a specific account. You can filter based on the type of the accounts.
@@ -79,7 +80,7 @@ types:
         400:
           body: 
             application/json:
-              example: {"errorMessage": "fatal error", "errorCode": 55}
+              example: !include Examples/errorObj.raml
 
     put:
       description: Replace a specific account. 
@@ -94,11 +95,12 @@ types:
         201:
           body: 
             application/json:
-              example: {"message" : "Account replaced (but not really)"}
+              example: 
+                message: Account replaced (but not really)
         400:
           body:
             application/json:
-              example: {"errorMessage": "fatal error", "errorCode": 55}    
+              example: !include Examples/errorObj.raml
 
     patch:
       description: Modify a specific account. 
@@ -113,27 +115,28 @@ types:
         201:
           body: 
             application/json:
-              example: {"message" : "Account modified (but not really)"}
+              example: 
+                message : Account modified (but not really)
         400:
           body:
             application/json:
-              example: {"errorMessage": "fatal error", "errorCode": 55}
+              example: 
+                errorMessage: fatal error
+                errorCode: 55
 
     delete:
       description: Delete a specific account. 
-
       headers: 
         Requester-ID: string
-      body: 
-        application/json:
-          type: AccountType
 
       responses: 
         201:
           body: 
             application/json:
               example: {"message" : "Account deleted (but not really)"}
-        400:
+        404:
           body:
             application/json:
-              example: {"errorMessage": "fatal error", "errorCode": 55}      
+              example: 
+                errorMessage: fatal error
+                errorCode: 55
