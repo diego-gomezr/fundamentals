@@ -1,0 +1,5 @@
+#Wed Mar 21 16:19:49 PDT 2018
+encoding=UTF-8
+domain=default
+redeployment.enabled=true
+config.resources=implementation.xml,interface.xml,global.xml

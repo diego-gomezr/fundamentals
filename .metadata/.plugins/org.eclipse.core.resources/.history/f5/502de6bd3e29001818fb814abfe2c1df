@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <flow name="dw-examplesFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/flight" allowedMethods="POST" doc:name="HTTP"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="f6bc1f5a-77ab-4c45-8ea8-22737bea3f26">
+            <dw:input-payload doc:sample="flight-example.json" mimeType="application/json"/>
+            <dw:set-payload resource="classpath:playground_json.dwl"/>
+            <dw:set-variable variableName="xml"><![CDATA[%dw 1.0
+%output application/xml
+---
+flights:
+{
+	flight:{
+		airline: payload.airline,
+		price : payload.price,
+		dest : payload.toAirportCode
+	}
+}]]></dw:set-variable>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="dw-examplesFlow1">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/flights" allowedMethods="POST" doc:name="HTTP"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="1517af14-a4e8-4dac-ab1b-de599da03fc1">
+            <dw:input-payload doc:sample="flights-example.xml" mimeType="application/xml"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+%namespace ns0 http://soap.training.mulesoft.com/
+
+%type currency = :string {format:"###.00"}
+%type flight = :object {class: "com.mulesoft.training.Flight"}
+---
+flights: payload.ns0#listAllFlightsResponse.*return map 
+{
+	destination: $.destination,
+	price : $.price as :number
+					as :currency,
+	planeType: upper ($.planeType replace /(Boing)/ with "Boeing"),
+	departureDate: $.departureDate as :date {format: "yyyy/MM/dd"}
+						  as :string {format: "MM dd, yyyy"},
+	availableSeats: $.emptySeats as :number,
+	//totalSeats: getNumSeats($.planeType) as :number
+	totalSeats: lookup("GetTotalSeats", {"type": $.plainType})
+} ]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="GetTotalSeats">
+        <expression-component doc:name="Expression"><![CDATA[if (payload.type.contains("737")) {payload = 200 ;} else {payload = 300 ;}]]></expression-component>
+    </flow>
+</mule>

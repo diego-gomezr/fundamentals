@@ -1,0 +1,11 @@
+{
+    "inputMessageMetadata": {},
+    "outputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "Salesforce__Basic_Authentication",
+            "typeId": "Account"
+        }
+    },
+    "id": "b830a3a6-ce3c-4e78-9765-7eff1ebc7465",
+    "version": "5.2.0.0"
+}

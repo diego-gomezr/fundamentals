@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:cluster="http://www.mulesoft.org/schema/mule/ee/cluster" xmlns:ws="http://www.mulesoft.org/schema/mule/ws" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:context="http://www.springframework.org/schema/context" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/current/mule-ws.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="${http.port}" doc:name="HTTP Listener Configuration"/>
+    <context:property-placeholder location="flights-${env}.properties"/>
+    <http:request-config name="American_HTTP_Request_Configuration" host="training-american-ws.cloudhub.io" port="80" basePath="/api/" doc:name="HTTP Request Configuration">
+        <http:raml-api-configuration location="https://anypoint.mulesoft.com/exchange/api/v1/organizations/68ef9520-24e9-4cf2-b2f5-620025690913/assets/68ef9520-24e9-4cf2-b2f5-620025690913/training-american-flights-api/1.0.1/api/root"/>
+    </http:request-config>
+    <ws:consumer-config name="Delta_Web_Service_Consumer" wsdlLocation="http://ilt.mulesoft-training.com/essentials/delta?wsdl" service="TicketServiceService" port="TicketServicePort" serviceAddress="http://training.cloudhub.io/essentials/delta" doc:name="Web Service Consumer"/>
+    <http:request-config name="United_HTTP_Request_Configuration" host="${united.host}" port="80" basePath="/essentials/united" doc:name="HTTP Request Configuration"/>
+    <configuration defaultExceptionStrategy-ref="ChoiceExceptionStrategy" doc:name="Configuration">
+        <http:config useTransportForUris="false"/>
+    </configuration>
+    <payload-type-filter expectedType="java.util.ArrayList" name="JSON_Response" doc:name="Payload"/>
+    <choice-exception-strategy name="ChoiceExceptionStrategy">
+        <catch-exception-strategy when="#[exception.causeMatches(&quot;com.mulesoft.weave.*&quot;)]" doc:name="No flights - DW Exception">
+            <set-property propertyName="http.status" value="404" doc:name="Property"/>
+            <set-payload value="#[&quot;No flights to airport: &quot; + flowVars.airportCode]" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+        <catch-exception-strategy when="#[exception.causeMatches(&quot;java.lang.IllegalArgumentException&quot;)]" doc:name="No Airport Code">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="#[&quot;Bad request. Exception: \n&quot; + exception]" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+        <catch-exception-strategy doc:name="All other exception">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="#[&quot;Data unavailable, try again later. Exception: \n&quot; + exception]" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+    </choice-exception-strategy>
+</mule>

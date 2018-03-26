@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <flow name="implementationFlow">
+        <set-variable variableName="Name" value="#[message.inboundProperties.'http.query.params'.name]" doc:name="Set Name"/>
+        <set-variable variableName="country" value="#[message.inboundProperties.'http.query.params'.country]" doc:name="Set Country"/>
+        <choice doc:name="Choice">
+            <when expression="#[message.inboundProperties.'http.query.params'.name] !">
+                <flow-ref name="getAccountsWithNameAndCountry" doc:name="Get Accounts with Name and Country"/>
+            </when>
+            <when expression="">
+                <flow-ref name="getAccountsWithName" doc:name="Get Accounts with Name"/>
+            </when>
+            <when expression="">
+                <flow-ref name="getAccountsWithCountry" doc:name="Get Accounts with Country"/>
+            </when>
+        </choice>
+    </flow>
+    <flow name="getAccountsWithNameAndCountry">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from flights_customers where accountType = #[message.inboundProperties.'http.query.params'.type] and name = #[message.inboundProperties.'http.query.params'.name] and country = #[message.inboundProperties.'http.query.params'.country]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="a31dbd89-c207-45e5-8808-d35791630116">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map {
+	ID: $.accountID as :number,
+	firstName: ($.name splitBy " ") [0],
+	lastName: ($.name splitBy " ") [1],
+	address: $.street,
+	postal: $.postal as :number,
+	country: $.country,
+	miles: $.miles,
+	creationDate: $.creationDate as :string
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="getAccountsWithName">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from flights_customers where accountType = #[message.inboundProperties.'http.query.params'.type] and name = #[message.inboundProperties.'http.query.params'.name]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="8846fe25-b10b-4d5c-aeaa-453626d6a2c1">
+            <dw:set-payload><![CDATA[
+%dw 1.0
+%output application/json
+---
+payload map {
+	ID: $.accountID as :number,
+	firstName: ($.name splitBy " ") [0],
+	lastName: ($.name splitBy " ") [1],
+	address: $.street,
+	postal: $.postal as :number,
+	country: $.country,
+	miles: $.miles,
+	creationDate: $.creationDate as :string
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="getAccountsWithCountry">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from flights_customers where accountType = #[message.inboundProperties.'http.query.params'.type] and country = #[message.inboundProperties.'http.query.params'.country]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="8846fe25-b10b-4d5c-aeaa-453626d6a2c1">
+            <dw:set-payload><![CDATA[
+%dw 1.0
+%output application/json
+---
+payload map {
+	ID: $.accountID as :number,
+	firstName: ($.name splitBy " ") [0],
+	lastName: ($.name splitBy " ") [1],
+	address: $.street,
+	postal: $.postal as :number,
+	country: $.country,
+	miles: $.miles,
+	creationDate: $.creationDate as :string
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <sub-flow name="getAccounts">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from flights_customers where accountType = #[message.inboundProperties.'http.query.params'.type]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="8846fe25-b10b-4d5c-aeaa-453626d6a2c1">
+            <dw:set-payload><![CDATA[
+%dw 1.0
+%output application/json
+---
+payload map {
+	ID: $.accountID as :number,
+	firstName: ($.name splitBy " ") [0],
+	lastName: ($.name splitBy " ") [1],
+	address: $.street,
+	postal: $.postal as :number,
+	country: $.country,
+	miles: $.miles,
+	creationDate: $.creationDate as :string
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </sub-flow>
+</mule>

@@ -1,0 +1,5 @@
+authenticated.users=[{"token"\:"d5805748-dc50-42e5-9db4-14455aaa6fba","userId"\:"dgomez-mule","refreshToken"\:"","baseUrl"\:"https\://anypoint.mulesoft.com/"},{"token"\:"e5c51f28-12f7-43c1-96a5-d41f83892753","userId"\:"dgomezr-mule","refreshToken"\:"","baseUrl"\:"https\://anypoint.mulesoft.com/"}]
+current.token=e5c51f28-12f7-43c1-96a5-d41f83892753
+current.user=dgomezr-mule
+eclipse.preferences.version=1
+org.mule.tooling.amc.apps={"userProjectMap"\:{"dgomez-mule"\:{"training-american-ws"\:"{\\"applicationName\\"\:\\"training-american-ws-dgomez\\",\\"muleRuntime\\"\:\\"3.9.0\\",\\"properties\\"\:{\\"env\\"\:\\"DEV\\"}}"}}}

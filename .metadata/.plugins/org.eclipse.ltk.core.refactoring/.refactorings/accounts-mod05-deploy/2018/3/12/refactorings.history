@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;tests.xml&apos; to &apos;flightcustomeraccounts/src/main/app&apos;&#x0A;- Original project: &apos;accounts-mod05-deploy&apos;&#x0A;- Destination element: &apos;flightcustomeraccounts/src/main/app&apos;&#x0A;- Original element: &apos;tests.xml&apos;" description="Copy file" destination="=flightcustomeraccounts/src\/main\/app" element1="src/main/app/tests.xml" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1521845478923" units="0" version="1.0"/>
+</session>

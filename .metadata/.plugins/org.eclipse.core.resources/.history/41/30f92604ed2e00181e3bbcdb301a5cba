@@ -1,0 +1,10 @@
+db.host = mudb.mulesoft-training.com
+db.port = 3306
+db.user = mule
+db.pass = mule
+db.instance = training
+db.table = flights_customers
+
+test.type = business
+test.requesterid = 123
+http.port = 9091
