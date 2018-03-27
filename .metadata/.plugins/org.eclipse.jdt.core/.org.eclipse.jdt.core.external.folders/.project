@@ -10,12 +10,12 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>.link4</name>
+			<name>.link8</name>
 			<type>2</type>
 			<location>/Applications/AnypointStudio.app/Contents/Eclipse/plugins/org.mule.tooling.server.3.9.0.ee_6.4.1.201710111930/mule/lib/mule/per-app</location>
 		</link>
 		<link>
-			<name>.link5</name>
+			<name>.link9</name>
 			<type>2</type>
 			<location>/Applications/AnypointStudio.app/Contents/Eclipse/plugins/org.mule.tooling.server.3.9.0.ee_6.4.1.201710111930/mule/plugins/data-mapper-plugin/classes</location>
 		</link>

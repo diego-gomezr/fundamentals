@@ -2,4 +2,4 @@ authenticated.users=[{"token"\:"d5805748-dc50-42e5-9db4-14455aaa6fba","userId"\:
 current.token=e5c51f28-12f7-43c1-96a5-d41f83892753
 current.user=dgomezr-mule
 eclipse.preferences.version=1
-org.mule.tooling.amc.apps={"userProjectMap"\:{"dgomez-mule"\:{"training-american-ws"\:"{\\"applicationName\\"\:\\"training-american-ws-dgomez\\",\\"muleRuntime\\"\:\\"3.9.0\\",\\"properties\\"\:{\\"env\\"\:\\"DEV\\"}}"}}}
+org.mule.tooling.amc.apps={"userProjectMap"\:{"dgomez-mule"\:{"training-american-ws"\:"{\\"applicationName\\"\:\\"training-american-ws-dgomez\\",\\"muleRuntime\\"\:\\"3.9.0\\",\\"properties\\"\:{\\"env\\"\:\\"DEV\\"}}"},"dgomezr-mule"\:{"flightcustomeraccounts"\:"{\\"applicationName\\"\:\\"flightcustomeraccounts\\",\\"muleRuntime\\"\:\\"3.9.0\\",\\"properties\\"\:{\\"env\\"\:\\"DEV\\"}}"}}}

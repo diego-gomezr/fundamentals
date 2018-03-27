@@ -1,11 +1,4 @@
 INDEX VERSION 1.127+/Volumes/GoogleDrive/My Drive/Training/Workspace/Fundamentals/.metadata/.plugins/org.eclipse.jdt.core
-2416139388.index
-3765020915.index
-3875826922.index
-241682911.index
-346757145.index
-611108103.index
-2281830673.index
-2540607589.index
-3531418406.index
-2036398409.index
+2578780247.index
+4004651201.index
+2665021381.index
